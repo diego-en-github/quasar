@@ -76,14 +76,11 @@ public class UbicacionServiceImpl implements UbicacionService {
 	
     
     private boolean validacionSatelites(List <SateliteRebelde> satelites, List<MensajeInterceptado> mensajes){
-    	if(satelites.size() != 3 || satelites.size() != mensajes.size() ||
+    	return satelites.size() != 3 || satelites.size() != mensajes.size() ||
     			!satelites.get(0).getNombre().equals(mensajes.get(0).getName()) ||
     			!satelites.get(0).getNombre().equals(mensajes.get(0).getName()) ||
-    			!satelites.get(0).getNombre().equals(mensajes.get(0).getName()) 
-    		){
-    		return true;
-    	}
-    	return false;
+    			!satelites.get(0).getNombre().equals(mensajes.get(0).getName());
+
     }
 	
 }
