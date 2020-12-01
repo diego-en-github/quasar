@@ -3,6 +3,7 @@ package fuegoQuasar.quasar.services.impl;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.lemmingapex.trilateration.TrilaterationFunction;
 
 import fuegoQuasar.quasar.excepciones.UbicacionException;
 import fuegoQuasar.quasar.model.entities.MensajeInterceptado;
+import fuegoQuasar.quasar.model.entities.Position;
 import fuegoQuasar.quasar.model.entities.SateliteRebelde;
 import fuegoQuasar.quasar.model.repository.SateliteRebeldeRepository;
 import fuegoQuasar.quasar.services.UbicacionService;
@@ -30,13 +32,13 @@ public class UbicacionServiceImpl implements UbicacionService {
 	private SateliteRebeldeRepository repository;
 	
 	
-	public double[] determinarUbicacion(List<MensajeInterceptado> mensajes) throws UbicacionException{
+	public Position determinarUbicacion(List<MensajeInterceptado> mensajes) throws UbicacionException{
 		
 		List <SateliteRebelde> satelites = repository.findAll();
 		satelites.sort(Comparator.comparing(SateliteRebelde::getNombre));
 		mensajes.sort(Comparator.comparing(MensajeInterceptado::getName));
 		
-		if(validacionSatelites(satelites, mensajes)){
+		if(!mismosSatelites(satelites, mensajes)){
 			throw new UbicacionException(messageSource.getMessage("message.exception.nocoinciden",null, Locale.getDefault()));
 		}
 		
@@ -45,7 +47,9 @@ public class UbicacionServiceImpl implements UbicacionService {
 		
 		double[] posicion = getLocation(coordenadas, distancias);
 		
-		return posicion;
+		Position p = new Position(posicion[0], posicion[1]);
+		
+		return p;
 		
 	}
 	
@@ -81,11 +85,11 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 	
     
-    private boolean validacionSatelites(List <SateliteRebelde> satelites, List<MensajeInterceptado> mensajes){
-    	return satelites.size() != 3 || satelites.size() != mensajes.size() ||
-    			!satelites.get(0).getNombre().equals(mensajes.get(0).getName()) ||
-    			!satelites.get(1).getNombre().equals(mensajes.get(1).getName()) ||
-    			!satelites.get(2).getNombre().equals(mensajes.get(2).getName());
+    private boolean mismosSatelites(List <SateliteRebelde> satelites, List<MensajeInterceptado> mensajes) {
+    	//List<String> nombreSatelite = satelites.stream().map(SateliteRebelde::getNombre).collect(Collectors.toList());
+    	//List <String> nombreMensaje	= mensajes.stream().map(MensajeInterceptado::getName).collect(Collectors.toList());	
+    	return satelites.stream().map(SateliteRebelde::getNombre).collect(Collectors.toList()).equals(
+    			mensajes.stream().map(MensajeInterceptado::getName).collect(Collectors.toList()));
 
     }
 	
