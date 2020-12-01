@@ -1,9 +1,12 @@
 package fuegoQuasar.quasar.services.impl;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import fuegoQuasar.quasar.excepciones.BadRequestException;
@@ -36,13 +39,18 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 	@Autowired
 	private SateliteRebeldeRepository sateliteRebeldeRepository;
 	
+	
+    @Autowired
+    @Qualifier("messageResourceSB")
+    MessageSource messageSource;
+	
 
 	@Override
 	public TopSecretResponse getTopSecretResponse(List<MensajeInterceptado> mensajes) throws MensajeException, UbicacionException, BadRequestException{
 		
 		try {
 			if(mensajesInvalidos(mensajes)){
-				throw new BadRequestException("El request es invalido");
+				throw new BadRequestException(messageSource.getMessage("message.exception.request",null, Locale.getDefault()));
 			}
 			
 			double [] distancia = ubicacionService.determinarUbicacion(mensajes);
@@ -76,7 +84,7 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 		List<MensajeInterceptado> mensajes = mensajeInterceptadoRepository.findAll();
 				  
 		if(mensajes.size() != 3){
-			throw new MensajeInterceptadoException("No hay suficiente informacion.");
+			throw new MensajeInterceptadoException(messageSource.getMessage("message.exception.request",null, Locale.getDefault()));
 		}
 		return getTopSecretResponse(mensajes);
 	}
@@ -89,27 +97,23 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 		mensaje.setName(nombreSatelite);
 		
 		if(mensajeInvalido(mensaje)){
-			throw new BadRequestException("El request es invalido");
+			throw new BadRequestException(messageSource.getMessage("message.exception.request",null, Locale.getDefault()));
 		}
 
 		List<SateliteRebelde> satelites = sateliteRebeldeRepository.findAll();
 		List<String> nombresSatelites = satelites.stream().map(SateliteRebelde::getNombre).collect(Collectors.toList());
 		
 		if(!nombresSatelites.contains(nombreSatelite)){
-			throw new BadRequestException("Es un satelite invalido");
+			throw new BadRequestException(messageSource.getMessage("message.exception.nombreinvalido",null, Locale.getDefault()));
 		}
-		
 		mensajeInterceptadoRepository.save(mensaje);
 		
-		
-		return new MensajeResponse("Mesaje recibido.");
+		return new MensajeResponse(messageSource.getMessage("message.recepcion",null, Locale.getDefault()));
 	}
 	
+	
 	private boolean mensajeInvalido(MensajeInterceptado mensaje){
-		if(mensaje.getDistance()== null || mensaje.getName() == null || mensaje.getMessage() == null){
-				return true;
-		}
-		return false;
+		return mensaje.getDistance()== null || mensaje.getName() == null || mensaje.getMessage() == null;
 	}
 	
 }

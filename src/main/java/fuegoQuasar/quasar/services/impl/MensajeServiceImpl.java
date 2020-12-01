@@ -3,7 +3,11 @@ package fuegoQuasar.quasar.services.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import fuegoQuasar.quasar.excepciones.MensajeException;
@@ -13,6 +17,10 @@ import fuegoQuasar.quasar.services.MensajeService;
 @Service
 public class MensajeServiceImpl implements MensajeService {
 
+    @Autowired
+    @Qualifier("messageResourceSB")
+    MessageSource messageSource;
+	
 	
 	public String capturarMensaje(List<MensajeInterceptado> mensajes) throws MensajeException{
 		
@@ -41,7 +49,7 @@ public class MensajeServiceImpl implements MensajeService {
 			} else if (!listaMensajes.get(2).get(i).equals("")){
 				mensajeDecodificado+= listaMensajes.get(2).get(i) + " ";
 			} else {
-				throw new MensajeException("No se pudo determinar el mensaje.");
+				throw new MensajeException(messageSource.getMessage("message.exception.mensajeindet",null, Locale.getDefault()));
 			}
 		}	
 		return mensajeDecodificado;
@@ -74,7 +82,7 @@ public class MensajeServiceImpl implements MensajeService {
 		for (List<String>  lm : listaMensajes) {
 			while (minimoMensaje < lm.size()){
 				if(!lm.get(0).equals("")){
-					throw new MensajeException("No se pudo determinar el mensaje.");
+					throw new MensajeException(messageSource.getMessage("message.exception.mensajeindet",null, Locale.getDefault()));
 				}
 				lm.remove(0);
 			}
