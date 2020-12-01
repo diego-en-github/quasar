@@ -1,7 +1,9 @@
 package fuegoQuasar.quasar.model.entities;
 
 import java.util.List;
-
+/*
+ * Wrapper para la entidad de mensajes interceptados
+ */
 public class MensajeWrapper {
 
 	

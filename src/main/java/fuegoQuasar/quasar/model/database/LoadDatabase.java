@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import fuegoQuasar.quasar.model.entities.SateliteRebelde;
 import fuegoQuasar.quasar.model.repository.SateliteRebeldeRepository;
 
+
+/*
+ * Carga inicial de los satelites rebeldes
+ */
 @Configuration
 class LoadDatabase {
 
