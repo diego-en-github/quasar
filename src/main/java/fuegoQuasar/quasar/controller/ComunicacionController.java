@@ -1,6 +1,10 @@
 package fuegoQuasar.quasar.controller;
 
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -31,6 +35,9 @@ public class ComunicacionController {
 	@Autowired
 	ComunicacionService comunicacionService;
 	
+    @Autowired
+    @Qualifier("messageResourceSB")
+    MessageSource messageSource;
 	
 	
 	@PostMapping(path = "/topsecret", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -38,11 +45,10 @@ public class ComunicacionController {
 		
 		if( requestEntity ==  null || requestEntity.getBody() == null || requestEntity.getBody().getSatelites() == null 
 				|| requestEntity.getBody().getSatelites().size() != 3 ) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MensajeResponse("El request es invalido"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MensajeResponse(messageSource.getMessage("message.exception.request",null, Locale.getDefault())));
 		}
 		
 		try {	
-			//comunicacionService.getTopSecretResponse(requestEntity.getBody().getSatelites());
 			return ResponseEntity.status(HttpStatus.OK).body(comunicacionService.getTopSecretResponse(requestEntity.getBody().getSatelites()));
 		
 		} catch (UbicacionException e) {	
@@ -56,11 +62,7 @@ public class ComunicacionController {
         }
 
 	}
-	/*
-	 * curl -X POST localhost:8080/employees -H 'Content-type:application/json' -d '{"name": "Samwise Gamgee", "role": "gardener"}'
-	 * 
-	 * {"satellites": [ { "name": "kenobi", "distance": 5.0, "message": ["este", "", "", "mensaje", ""]	}, {"name": "skywalker", "distance": 5.0, "message": ["", "es", "", "", "secreto"]}, {"name": "sato", "distance": 13.0, "message": ["", "", "un", "", ""] } ] }
-	 */
+
 	
 	@GetMapping(path = "/topsecret_split", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity topSecretSplit() {
@@ -76,7 +78,7 @@ public class ComunicacionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MensajeResponse(e.getMessage()));
         
 		} catch (MensajeInterceptadoException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MensajeResponse("No hay suficiente informacion."));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MensajeResponse(e.getMessage()));
             
         } catch (BadRequestException e){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MensajeResponse(e.getMessage()));

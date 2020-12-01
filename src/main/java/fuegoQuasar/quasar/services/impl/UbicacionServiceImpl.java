@@ -2,9 +2,12 @@ package fuegoQuasar.quasar.services.impl;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
@@ -19,6 +22,9 @@ import fuegoQuasar.quasar.services.UbicacionService;
 @Service
 public class UbicacionServiceImpl implements UbicacionService {
 
+    @Autowired
+    @Qualifier("messageResourceSB")
+    MessageSource messageSource;
 	
 	@Autowired
 	private SateliteRebeldeRepository repository;
@@ -31,7 +37,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 		mensajes.sort(Comparator.comparing(MensajeInterceptado::getName));
 		
 		if(validacionSatelites(satelites, mensajes)){
-			throw new UbicacionException("Los satelites no coinciden.");
+			throw new UbicacionException(messageSource.getMessage("message.exception.nocoinciden",null, Locale.getDefault()));
 		}
 		
 		double[][] coordenadas = getCoordenadasSatelites(satelites);
@@ -78,8 +84,8 @@ public class UbicacionServiceImpl implements UbicacionService {
     private boolean validacionSatelites(List <SateliteRebelde> satelites, List<MensajeInterceptado> mensajes){
     	return satelites.size() != 3 || satelites.size() != mensajes.size() ||
     			!satelites.get(0).getNombre().equals(mensajes.get(0).getName()) ||
-    			!satelites.get(0).getNombre().equals(mensajes.get(0).getName()) ||
-    			!satelites.get(0).getNombre().equals(mensajes.get(0).getName());
+    			!satelites.get(1).getNombre().equals(mensajes.get(1).getName()) ||
+    			!satelites.get(2).getNombre().equals(mensajes.get(2).getName());
 
     }
 	
