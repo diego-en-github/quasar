@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/*
+ * Entidad para el mensaje interceptado por los satelites rebeldes
+ */
 @Entity
 public class MensajeInterceptado {
 	

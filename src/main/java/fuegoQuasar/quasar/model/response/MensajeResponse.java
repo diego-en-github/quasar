@@ -1,5 +1,8 @@
 package fuegoQuasar.quasar.model.response;
 
+/*
+ * Mensaje de response
+ */
 public class MensajeResponse {
 
 	private String respuesta;

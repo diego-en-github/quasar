@@ -19,6 +19,10 @@ import fuegoQuasar.quasar.model.entities.MensajeWrapper;
 import fuegoQuasar.quasar.model.response.MensajeResponse;
 import fuegoQuasar.quasar.services.ComunicacionService;
 
+/*
+ * Punto de entrada de los Webservices
+ */
+
 @RestController
 public class ComunicacionController {
 

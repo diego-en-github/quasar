@@ -1,5 +1,8 @@
 package fuegoQuasar.quasar.model.response;
 
+/*
+ * Mensaje de response para devolder la posicion y mensaje decodificado
+ */
 public class TopSecretResponse {
 	
 	private double[] location;

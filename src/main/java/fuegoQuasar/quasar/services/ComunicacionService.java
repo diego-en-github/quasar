@@ -10,6 +10,9 @@ import fuegoQuasar.quasar.model.entities.MensajeInterceptado;
 import fuegoQuasar.quasar.model.response.MensajeResponse;
 import fuegoQuasar.quasar.model.response.TopSecretResponse;
 
+/*
+ * Service del controller
+ */
 public interface ComunicacionService {
 	
 
