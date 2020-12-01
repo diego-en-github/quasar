@@ -1,31 +1,26 @@
 package fuegoQuasar.quasar.model.response;
 
+import fuegoQuasar.quasar.model.entities.Position;
+
 /*
  * Mensaje de response para devolder la posicion y mensaje decodificado
  */
 public class TopSecretResponse {
 	
-	private double[] location;
 	private String message;
+	private Position position;
 	
 	
 	public TopSecretResponse() {
 		
 	}
 	
-	public TopSecretResponse(double[] location, String message) {
+	public TopSecretResponse(Position position, String message) {
 		super();
-		this.location = location;
 		this.message = message;
+		this.position =  position;
 	}
 
-	public double[] getLocation() {
-		return location;
-	}
-	
-	public void setLocation(double[] location) {
-		this.location = location;
-	}
 	
 	public String getMessage() {
 		return message;
@@ -33,6 +28,14 @@ public class TopSecretResponse {
 	
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 	
 

@@ -14,6 +14,7 @@ import fuegoQuasar.quasar.excepciones.MensajeException;
 import fuegoQuasar.quasar.excepciones.MensajeInterceptadoException;
 import fuegoQuasar.quasar.excepciones.UbicacionException;
 import fuegoQuasar.quasar.model.entities.MensajeInterceptado;
+import fuegoQuasar.quasar.model.entities.Position;
 import fuegoQuasar.quasar.model.entities.SateliteRebelde;
 import fuegoQuasar.quasar.model.repository.MensajeInterceptadoRepository;
 import fuegoQuasar.quasar.model.repository.SateliteRebeldeRepository;
@@ -53,7 +54,7 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 				throw new BadRequestException(messageSource.getMessage("message.exception.request",null, Locale.getDefault()));
 			}
 			
-			double [] distancia = ubicacionService.determinarUbicacion(mensajes);
+			Position distancia = ubicacionService.determinarUbicacion(mensajes);
 			String mensaje = mensajeService.capturarMensaje(mensajes);
 			TopSecretResponse response = new TopSecretResponse(distancia, mensaje);
 			return response;
@@ -84,7 +85,7 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 		List<MensajeInterceptado> mensajes = mensajeInterceptadoRepository.findAll();
 				  
 		if(mensajes.size() != 3){
-			throw new MensajeInterceptadoException(messageSource.getMessage("message.exception.request",null, Locale.getDefault()));
+			throw new MensajeInterceptadoException(messageSource.getMessage("message.exception.faltainfo",null, Locale.getDefault()));
 		}
 		return getTopSecretResponse(mensajes);
 	}
@@ -106,6 +107,15 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 		if(!nombresSatelites.contains(nombreSatelite)){
 			throw new BadRequestException(messageSource.getMessage("message.exception.nombreinvalido",null, Locale.getDefault()));
 		}
+		
+		List<MensajeInterceptado> mensajesSatelites = mensajeInterceptadoRepository.findAll();
+		List<String> nombreMensajes = mensajesSatelites.stream().map(MensajeInterceptado::getName).collect(Collectors.toList());
+		
+		if(nombreMensajes.contains(nombreSatelite)){
+			throw new BadRequestException(messageSource.getMessage("message.exception.repetido",null, Locale.getDefault()));
+		}
+		
+		
 		mensajeInterceptadoRepository.save(mensaje);
 		
 		return new MensajeResponse(messageSource.getMessage("message.recepcion",null, Locale.getDefault()));
