@@ -71,7 +71,7 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 	
 	private boolean mensajesInvalidos(List<MensajeInterceptado> mensajes){
 		for(MensajeInterceptado m: mensajes){
-			if(m.getDistance()== null || m.getName() == null || m.getMessage() == null){
+			if(m.getDistance()== null  || m.getName() == null || m.getName().equals("") || m.getMessage() == null){
 				return true;
 			}
 		}

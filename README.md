@@ -47,3 +47,9 @@ Response:
 ### Errores
 
 En caso de que se produzca en error se espera devolver un mensaje descriptivo.
+
+### Consideraciones
+
+- Para resolver la función getLocation() utilizé el algoritmo provisto por la biblioteca com.lemmingapex.trilateration
+
+- En el mensaje recibido se admite una ilimitada cantidad de caracteres de desfazaje representado por ""
