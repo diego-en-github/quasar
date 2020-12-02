@@ -2,6 +2,7 @@ package fuegoQuasar.quasar.services.impl;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,20 +104,23 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 
 		List<SateliteRebelde> satelites = sateliteRebeldeRepository.findAll();
 		List<String> nombresSatelites = satelites.stream().map(SateliteRebelde::getNombre).collect(Collectors.toList());
-		
+				
 		if(!nombresSatelites.contains(nombreSatelite)){
 			throw new BadRequestException(messageSource.getMessage("message.exception.nombreinvalido",null, Locale.getDefault()));
 		}
 		
 		List<MensajeInterceptado> mensajesSatelites = mensajeInterceptadoRepository.findAll();
-		List<String> nombreMensajes = mensajesSatelites.stream().map(MensajeInterceptado::getName).collect(Collectors.toList());
 		
-		if(nombreMensajes.contains(nombreSatelite)){
-			throw new BadRequestException(messageSource.getMessage("message.exception.repetido",null, Locale.getDefault()));
+		Optional<MensajeInterceptado> ms = mensajesSatelites.stream().filter(p -> p.getName().equals(nombreSatelite)).findFirst();
+		if(ms.isPresent()){
+			ms.get().setDistance(mensaje.getDistance());
+			ms.get().setMessage(mensaje.getMessage());
+			mensajeInterceptadoRepository.save(ms.get());
+		}else{
+			mensajeInterceptadoRepository.save(mensaje);
 		}
 		
 		
-		mensajeInterceptadoRepository.save(mensaje);
 		
 		return new MensajeResponse(messageSource.getMessage("message.recepcion",null, Locale.getDefault()));
 	}

@@ -86,8 +86,6 @@ public class UbicacionServiceImpl implements UbicacionService {
 	
     
     private boolean mismosSatelites(List <SateliteRebelde> satelites, List<MensajeInterceptado> mensajes) {
-    	//List<String> nombreSatelite = satelites.stream().map(SateliteRebelde::getNombre).collect(Collectors.toList());
-    	//List <String> nombreMensaje	= mensajes.stream().map(MensajeInterceptado::getName).collect(Collectors.toList());	
     	return satelites.stream().map(SateliteRebelde::getNombre).collect(Collectors.toList()).equals(
     			mensajes.stream().map(MensajeInterceptado::getName).collect(Collectors.toList()));
 
