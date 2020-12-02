@@ -127,7 +127,7 @@ public class ComunicacionServiceImpl implements ComunicacionService {
 	
 	
 	private boolean mensajeInvalido(MensajeInterceptado mensaje){
-		return mensaje.getDistance()== null || mensaje.getName() == null || mensaje.getMessage() == null;
+		return mensaje.getDistance()== null || mensaje.getName() == null || mensaje.getName().equals("")  || mensaje.getMessage() == null;
 	}
 	
 }
